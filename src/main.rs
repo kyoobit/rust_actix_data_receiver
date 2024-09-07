@@ -195,7 +195,7 @@ async fn actix_main(args: Args) -> std::io::Result<()> {
             .service(create_data)
             .service(ping)
     })
-    .bind(("0.0.0.0", args.port))?
+    .bind((args.addr, args.port))?
     .run()
     .await
 }
