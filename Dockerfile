@@ -1,7 +1,10 @@
 FROM docker.io/library/rust:alpine AS builder
 
 ## Add os build dependencies
+## podman run --rm --tty --interactive rust:alpine /bin/sh
+## apk update; apk info <package>
 RUN apk add --no-cache musl-dev=1.2.5-r0
+RUN apk add --no-cache sqlite-static=3.45.3-r1 sqlite-dev=3.45.3-r1
 
 ## Copy the source files for the project
 WORKDIR /actix-data-receiver
@@ -11,11 +14,9 @@ COPY ./src ./src
 ## Build the release
 RUN cargo build --release
 
-## Use a dirstroless image to run the compiled application binary
-## https://github.com/GoogleContainerTools/distroless
-## https://github.com/GoogleContainerTools/distroless/blob/main/cc/README.md
-## https://github.com/GoogleContainerTools/distroless/blob/main/examples/rust/Dockerfile
-FROM gcr.io/distroless/cc-debian12:nonroot AS final
+## Use a small base image to run the compiled application binary
+## TODO: distroless encountered permission issues when writing, see if there is a work around
+FROM docker.io/library/alpine:latest AS final
 
 ## Copy the compiled application binary from the builder
 COPY --from=builder /actix-data-receiver/target/release/actix-data-receiver \

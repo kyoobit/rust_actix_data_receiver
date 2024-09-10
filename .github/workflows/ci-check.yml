@@ -1,10 +1,15 @@
 name: CI Check
 
+## This workflow runs when any of the following occur:
+## * A push is made to the main branch
+## * A pull request is created or updated in the main branch
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 env:
   CARGO_TERM_COLOR: always
@@ -13,7 +18,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
+    ## https://github.com/actions/checkout
     - uses: actions/checkout@v4
+
+    ## https://github.com/dtolnay/rust-toolchain
     - uses: dtolnay/rust-toolchain@master
       with:
         toolchain: stable
