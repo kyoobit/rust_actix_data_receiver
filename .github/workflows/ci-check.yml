@@ -31,7 +31,7 @@ jobs:
     - name: Check format
       run: make format
 
-    - name: Chek lint
+    - name: Check lint
       run: make lint
 
     - name: Build
